@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Tugu Insurance Corporate Color Palette */
+  --tugu-navy: #091a38;
+  --tugu-navy-dark: #050e21;
+  --tugu-blue: #0052cc;
+  --tugu-blue-hover: #003e99;
+  --tugu-light-blue: #38bdf8;
+  --tugu-green: #84cc16;
+  --tugu-red: #ff3b30;
+  
+  --bg-primary: #070f23;
+  --bg-card: rgba(255, 255, 255, 0.96);
+  --bg-card-dark: rgba(15, 26, 56, 0.85);
+  
+  --text-dark: #0f172a;
+  --text-muted: #64748b;
+  --text-light: #f8fafc;
+  
+  --border-light: rgba(226, 232, 240, 0.8);
+  --border-dark: rgba(255, 255, 255, 0.12);
+  
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  --shadow-floating: 0 20px 40px -10px rgba(0, 0, 0, 0.25);
+  
+  --radius-pill: 9999px;
+  --radius-lg: 16px;
+  --radius-md: 10px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-light);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--tugu-navy-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--tugu-blue);
+  border-radius: 4px;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+input, select, textarea {
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+/* Primary Button Styles */
+.btn-tugu-primary {
+  background: linear-gradient(135deg, var(--tugu-blue) 0%, #1e40af 100%);
+  color: white;
+  padding: 12px 24px;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 14px rgba(0, 82, 204, 0.35);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-tugu-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0, 82, 204, 0.5);
+  background: linear-gradient(135deg, #0046ad 0%, #1d399c 100%);
+}
+
+.btn-tugu-outline {
+  background: transparent;
+  color: white;
+  padding: 11px 22px;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-tugu-outline:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: white;
+  transform: translateY(-2px);
+}
+
+.badge {
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.badge-success { background: rgba(132, 204, 22, 0.18); color: #a3e635; border: 1px solid rgba(132, 204, 22, 0.4); }
+.badge-blue { background: rgba(56, 189, 248, 0.18); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
+.badge-warning { background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+.badge-danger { background: rgba(255, 59, 48, 0.18); color: #ff6b6b; border: 1px solid rgba(255, 59, 48, 0.4); }
