@@ -27,22 +27,24 @@ onMounted(async () => {
   if (token) {
     // Simpan token JWT ke localStorage (meniru alur login manual yang sudah ada)
     localStorage.setItem('access_token', token);
+    let role = 'customer';
     
     try {
       const res = await api.get('/me');
       if (res.data?.success && res.data?.data) {
         localStorage.setItem('user', JSON.stringify(res.data.data));
+        role = res.data.data.role || 'customer';
       }
     } catch (e) {
       console.error('Gagal mengambil data user via SSO:', e);
     }
     
-    // Redirect langsung ke Dashboard
-    router.push('/dashboard'); 
+    // Redirect langsung ke Dashboard sesuai role
+    router.push(role === 'admin' ? '/admin/dashboard' : '/customer/dashboard'); 
   } else {
     // Jika gagal, kembalikan ke login dan tampilkan error
     const errMsg = error || 'Gagal login menggunakan SSO.';
-    router.push(`/admin/login?error=${encodeURIComponent(errMsg)}`);
+    router.push(`/customer/login?error=${encodeURIComponent(errMsg)}`);
   }
 });
 </script>

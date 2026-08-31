@@ -100,6 +100,36 @@
               <span v-if="loading" class="btn-spinner"></span>
               <span v-else>Masuk ke Panel Admin</span>
             </button>
+
+            <!-- Separator "Atau masuk dengan" -->
+            <div class="sso-separator">
+              <span class="sso-separator-text">Atau masuk dengan</span>
+            </div>
+
+            <!-- Tombol SSO Google & Facebook -->
+            <div class="sso-grid">
+              <button 
+                @click="loginWithSSO('google')"
+                type="button"
+                class="btn-sso"
+              >
+                <svg viewBox="0 0 24 24" width="18" height="18" style="flex-shrink:0;">
+                  <path fill="#EA4335" d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.2-5.136 4.2A5.72 5.72 0 0 1 8.28 12.87a5.72 5.72 0 0 1 5.71-5.73 5.48 5.48 0 0 1 3.86 1.54l3.22-3.23A10.16 10.16 0 0 0 13.99 3a9.98 9.98 0 0 0-9.99 10 9.98 9.98 0 0 0 9.99 10c5.36 0 9.92-3.79 9.92-10a9.04 9.04 0 0 0-.17-1.715h-11.5Z"/>
+                </svg>
+                Google
+              </button>
+
+              <button 
+                @click="loginWithSSO('facebook')"
+                type="button"
+                class="btn-sso"
+              >
+                <svg viewBox="0 0 24 24" width="18" height="18" style="flex-shrink:0;">
+                  <path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+                Facebook
+              </button>
+            </div>
           </form>
 
           <div class="auth-bottom">
@@ -144,10 +174,6 @@ const handleLogin = async () => {
       throw new Error('Token tidak ditemukan');
     }
 
-    // PENTING: walau email/password benar, kalau akun ini bukan admin,
-    // TOLAK masuk ke panel admin. Endpoint /api/login tidak tahu-menahu
-    // soal "halaman mana" yang manggil dia -- makanya validasi role
-    // wajib dilakukan di sini juga, bukan cuma mengandalkan proteksi API.
     if (user?.role !== 'admin') {
       errorMsg.value = 'Akun ini bukan akun admin.';
       return;
@@ -161,6 +187,10 @@ const handleLogin = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+const loginWithSSO = (provider) => {
+  window.location.href = `http://localhost:8000/api/auth/${provider}?role=admin`;
 };
 </script>
 

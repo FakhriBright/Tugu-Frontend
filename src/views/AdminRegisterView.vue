@@ -183,10 +183,16 @@ const handleRegister = async () => {
   successMessage.value = '';
   try {
     const payload = { name: form.name, email: form.email, password: form.password };
-    const res = await api.post('/register', payload);
+    const res = await api.post('/register-admin', payload);
     if (res.data?.success) {
-      successMessage.value = 'Registrasi berhasil';
-      setTimeout(() => router.push('/admin/login'), 1200);
+      const token = res.data?.data?.access_token;
+      const user = res.data?.data?.user;
+      if (token && user) {
+        localStorage.setItem('access_token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+      }
+      successMessage.value = 'Registrasi admin berhasil! Mengalihkan...';
+      setTimeout(() => router.push('/admin/dashboard'), 1000);
     } else {
       errorMessage.value = res.data?.message || 'Registrasi gagal';
     }
@@ -205,7 +211,7 @@ const handleRegister = async () => {
 };
 
 const loginWithSSO = (provider) => {
-  window.location.href = `http://localhost:8000/api/auth/${provider}`;
+  window.location.href = `http://localhost:8000/api/auth/${provider}?role=admin`;
 };
 </script>
 

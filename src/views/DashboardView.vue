@@ -482,7 +482,7 @@ const toast = (msg, type = 'success') => {
 const handleAuthExpired = () => {
   localStorage.removeItem('access_token');
   localStorage.removeItem('user');
-  router.push('/login');
+  router.push('/admin/login');
 };
 
 onMounted(async () => {
@@ -683,7 +683,7 @@ const handleLogout = async () => {
   try { await api.post('/logout'); } catch {}
   localStorage.removeItem('access_token');
   localStorage.removeItem('user');
-  router.push('/login');
+  router.push('/admin/login');
 };
 
 // ---- Helpers ----

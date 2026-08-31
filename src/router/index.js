@@ -61,6 +61,34 @@ const routes = [
     meta: { requiresAuth: true, role: 'admin' },
   },
 
+  // ==== Redirects & Shortcuts ====
+  {
+    path: '/dashboard',
+    name: 'DashboardRedirect',
+    redirect: () => {
+      const token = localStorage.getItem('access_token');
+      if (!token) return '/customer/login';
+      const role = getStoredRole();
+      return role === 'admin' ? '/admin/dashboard' : '/customer/dashboard';
+    },
+  },
+  {
+    path: '/admin',
+    redirect: '/admin/dashboard',
+  },
+  {
+    path: '/customer',
+    redirect: '/customer/dashboard',
+  },
+  {
+    path: '/login',
+    redirect: '/customer/login',
+  },
+  {
+    path: '/register',
+    redirect: '/customer/register',
+  },
+
   // SSO callback (dipakai customer login via Google)
   {
     path: '/auth/callback',
