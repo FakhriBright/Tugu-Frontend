@@ -1,12 +1,21 @@
 import axios from 'axios';
 
+const apiHost = window.location.hostname || 'localhost';
+const apiPort = import.meta.env.VITE_API_PORT || '8000';
+const apiBaseURL = import.meta.env.VITE_API_BASE_URL || `${window.location.protocol}//${apiHost}:${apiPort}/api`;
+
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api',
+  baseURL: apiBaseURL,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
   },
 });
+
+export const getAuthUrl = (provider, role) => {
+  const base = import.meta.env.VITE_API_BASE_URL || `${window.location.protocol}//${apiHost}:${apiPort}/api`;
+  return `${base}/auth/${provider}?role=${role}`;
+};
   
 // Buat nyertain Authorization Bearer pada setiap permintaan kalo ada
 api.interceptors.request.use((config) => {

@@ -167,7 +167,7 @@
 <script setup>
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
-import api from '../api';
+import api, { getAuthUrl } from '../api';
 
 const router = useRouter();
 const loading = ref(false);
@@ -211,7 +211,7 @@ const handleRegister = async () => {
 };
 
 const loginWithSSO = (provider) => {
-  window.location.href = `http://localhost:8000/api/auth/${provider}?role=admin`;
+  window.location.href = getAuthUrl(provider, 'admin');
 };
 </script>
 

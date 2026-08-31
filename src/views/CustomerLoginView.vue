@@ -70,7 +70,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import api from '../api';
+import api, { getAuthUrl } from '../api';
 
 const router = useRouter();
 const email = ref('');
@@ -80,7 +80,7 @@ const showPass = ref(false);
 const errorMsg = ref('');
 
 const loginWithSSO = (provider) => {
-  window.location.href = `http://localhost:8000/api/auth/${provider}?role=customer`;
+  window.location.href = getAuthUrl(provider, 'customer');
 };
 
 const handleLogin = async () => {
