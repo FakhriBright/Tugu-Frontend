@@ -84,12 +84,13 @@
 
           <label class="modal-label">Jumlah</label>
           <input type="number" v-model.number="buyQuantity" min="1" :max="buyModalItem.stock" class="modal-input" />
+          <p v-if="buyQuantity > buyModalItem.stock" class="stock-warning">⚠️ Stok tidak cukup! Tersedia: {{ buyModalItem.stock }}</p>
 
           <p class="modal-total">Total: Rp{{ formatNumber(buyModalItem.price * buyQuantity) }}</p>
 
           <div class="modal-actions">
             <button class="btn-secondary" @click="buyModalItem = null">Batal</button>
-            <button class="btn-primary" :disabled="buyLoading" @click="confirmBuy">
+            <button class="btn-primary" :disabled="buyLoading || buyQuantity > buyModalItem.stock || buyModalItem.stock <= 0" @click="confirmBuy">
               {{ buyLoading ? 'Memproses...' : 'Konfirmasi Beli' }}
             </button>
           </div>
@@ -167,6 +168,10 @@ const openBuyModal = (item) => {
 
 const confirmBuy = async () => {
   if (!buyModalItem.value) return;
+  if (buyQuantity.value > buyModalItem.value.stock) {
+    toast(`Stok tidak cukup! Tersedia: ${buyModalItem.value.stock}`, 'error');
+    return;
+  }
   buyLoading.value = true;
   try {
     await api.post('/transactions', {
@@ -471,4 +476,11 @@ onMounted(() => {
 
 .modal-fade-enter-active, .modal-fade-leave-active { transition: opacity 0.2s; }
 .modal-fade-enter-from, .modal-fade-leave-to { opacity: 0; }
+
+.stock-warning {
+  color: #dc2626;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin: 6px 0 0;
+}
 </style>

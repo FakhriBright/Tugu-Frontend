@@ -389,14 +389,21 @@
                 <label>Item</label>
                 <select v-model="transactionForm.item_id" required>
                   <option disabled value="">Pilih Item</option>
-                  <option v-for="(item, idx) in items" :key="item.id" :value="item.id">#{{ idx + 1 }} - {{ item.name }}</option>
+                  <option v-for="(item, idx) in items" :key="item.id" :value="item.id">#{{ idx + 1 }} - {{ item.name }} (Stok: {{ item.stock }})</option>
                 </select>
+                <small v-if="selectedItemForTransaction" :style="{ color: selectedItemForTransaction.stock <= 0 ? '#ff4d6a' : '#6ee7b7', marginTop: '6px', display: 'block' }">
+                  Stok tersedia: <strong>{{ selectedItemForTransaction.stock }}</strong>
+                </small>
               </div>
               <div class="form-group">
                 <label>Quantity</label>
-                <input v-model.number="transactionForm.quantity" type="number" min="1" required />
+                <input v-model.number="transactionForm.quantity" type="number" min="1" :max="selectedItemForTransaction ? selectedItemForTransaction.stock : undefined" required />
+                <small v-if="selectedItemForTransaction && transactionForm.quantity > selectedItemForTransaction.stock" style="color: #ff4d6a; margin-top: 6px; display: block;">
+                  ⚠️ Melebihi stok! Maksimal: {{ selectedItemForTransaction.stock }}
+                </small>
               </div>
             </div>
+            <div v-if="selectedItemForTransaction && selectedItemForTransaction.stock <= 0" class="alert alert-danger">Stok item ini sudah habis, tidak bisa membuat transaksi.</div>
             <div v-if="transactionModalError" class="alert alert-danger">{{ transactionModalError }}</div>
             <div class="modal-footer">
               <button type="button" class="btn-cancel" @click="closeTransactionModal">Batal</button>
@@ -615,7 +622,22 @@ const openTransactionModal = (tx = null) => {
 
 const closeTransactionModal = () => { showTransactionModal.value = false; };
 
+const selectedItemForTransaction = computed(() => {
+  if (!transactionForm.value.item_id) return null;
+  return items.value.find(i => i.id === transactionForm.value.item_id) || null;
+});
+
 const submitTransaction = async () => {
+  // Validasi stok di sisi klien
+  const selectedItem = selectedItemForTransaction.value;
+  if (selectedItem && transactionForm.value.quantity > selectedItem.stock) {
+    transactionModalError.value = `Stok tidak cukup! Stok tersedia: ${selectedItem.stock}, jumlah dipesan: ${transactionForm.value.quantity}`;
+    return;
+  }
+  if (selectedItem && selectedItem.stock <= 0) {
+    transactionModalError.value = 'Stok item ini sudah habis, tidak bisa membuat transaksi.';
+    return;
+  }
   savingTransaction.value = true;
   transactionModalError.value = '';
   try {
@@ -629,6 +651,7 @@ const submitTransaction = async () => {
     }
     closeTransactionModal();
     await loadTransactions();
+    await loadItems();
   } catch (e) {
     transactionModalError.value = e.response?.data?.message || 'Gagal menyimpan transaksi.';
   } finally { savingTransaction.value = false; }
@@ -659,6 +682,7 @@ const updateTxStatus = async (tx, newStatus) => {
     await api.put(`/transactions/${tx.id}`, { status: newStatus });
     tx.status = newStatus;
     toast(`Status transaksi #${tx.id} → ${newStatus}`);
+    await loadItems();
   } catch { toast('Gagal mengubah status transaksi', 'error'); }
 };
 
